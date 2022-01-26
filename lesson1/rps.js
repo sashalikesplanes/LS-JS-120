@@ -1,22 +1,3 @@
-// DESCRIPTION
-
-// RPS is a two player game
-// Where each player chooses a move out of rock paper or scissors
-// Then the two moves are compared
-// And based on the rules a winner is declared
-
-// NOUNS AND VERBS
-
-// Nouns: player, move (out of rock, paper, scissors), rules
-// Verbs: choose, compare, declare
-
-// ORGANIZE
-// player
-//  - choose
-// Move
-// Rule
-// - compare?
-
 const readline = require("readline-sync");
 const CHOICES = ["rock", "paper", "scissors", "lizard", "spock"];
 const WINNING_MOVES = [
