@@ -6,6 +6,10 @@ const createBook = (title, author, read = false) => ({
   getDescription() {
     return `${this.title} was written by ${this.author}.`;
   },
+
+  readBook() {
+    this.read = true;
+  },
 });
 
 let book1 = createBook("Mythos", "Stephen Fry");
@@ -19,3 +23,7 @@ console.log(book3.getDescription()); // "Aunts aren't Gentlemen was written by P
 console.log(book1.read); // => false
 console.log(book2.read); // => false
 console.log(book3.read); // => false
+
+console.log(book1.read); // => false
+book1.readBook();
+console.log(book1.read); // => true
