@@ -1,7 +1,7 @@
-const createBook = (title, author) => ({
+const createBook = (title, author, read = false) => ({
   title,
   author,
-  read: false,
+  read,
 
   getDescription() {
     return `${this.title} was written by ${this.author}.`;
