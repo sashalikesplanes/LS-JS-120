@@ -4,10 +4,9 @@ const createBook = (title, author, read = false) => ({
   read,
 
   getDescription() {
-    let description = `${this.title} was written by ${this.author}. `;
-    if (this.read) description += "I have read it.";
-    else description += "I haven't read it.";
-    return description;
+    return `${this.title} was written by ${this.author}. I ${
+      this.read ? "have" : "haven't"
+    } read it.`;
   },
 
   readBook() {
