@@ -18,7 +18,6 @@
 // - compare?
 
 const readline = require("readline-sync");
-
 const CHOICES = ["rock", "paper", "scissors", "lizard", "spock"];
 const WINNING_MOVES = [
   "rockscissors",
@@ -75,9 +74,9 @@ function createHuman() {
 
       while (true) {
         console.log(`Please choose one of (${CHOICES.join(", ")}): `);
-        choice = readline.prompt();
+        choice = readline.prompt().toLowerCase();
         if (CHOICES.includes(choice)) break;
-        console.log("Invalid choice!");
+        console.log(`Invalid choice! Choose one of ${CHOICES.join(", ")}`);
       }
       this.moves.push(choice);
     },
@@ -93,7 +92,11 @@ const RPSGame = {
 
   displayWelcomeMsg() {
     console.clear();
-    console.log(`Welcome to ${CHOICES.join(", ")}!`);
+    console.log(`Welcome to ${CHOICES.join(", ")}! First to 5 wins!`);
+    console.log("Scissors cuts Paper cover Rock crushes");
+    console.log("Lizard poisons Spock smashes Scissors");
+    console.log("decapitates Lizard eats Paper disproves");
+    console.log("Spock vaporizes Rock crushes Scissors.");
   },
 
   displayGoodbyeMsg() {
@@ -135,8 +138,8 @@ const RPSGame = {
 
   playAgain() {
     console.log('Would you like to play again? "y" / "n"');
-    let answer = readline.prompt();
-    return answer.toLowerCase()[0] === "y";
+    let answer = readline.prompt().toLowerCase();
+    return answer === "y" || answer === "yes";
   },
 
   resetScores() {
