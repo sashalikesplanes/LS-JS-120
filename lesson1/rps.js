@@ -1,19 +1,3 @@
-const readline = require("readline-sync");
-const CHOICES = ["rock", "paper", "scissors", "lizard", "spock"];
-const WINNING_MOVES = [
-  "rockscissors",
-  "paperrock",
-  "scissorspaper",
-  "rocklizard",
-  "lizardspock",
-  "spockscissors",
-  "scissorslizard",
-  "lizardpaper",
-  "paperspock",
-  "spockrock",
-];
-const SCORE_TO_WIN = 5;
-
 function createPlayer() {
   return {
     moves: [],
@@ -38,8 +22,8 @@ function createComp() {
 
   let compPlayer = {
     choose() {
-      let randomIdx = Math.floor(Math.random() * CHOICES.length);
-      this.moves.push(CHOICES[randomIdx]);
+      let randomIdx = Math.floor(Math.random() * RPSGame.CHOICES.length);
+      this.moves.push(RPSGame.CHOICES[randomIdx]);
     },
   };
 
@@ -54,10 +38,12 @@ function createHuman() {
       let choice;
 
       while (true) {
-        console.log(`Please choose one of (${CHOICES.join(", ")}): `);
-        choice = readline.prompt().toLowerCase();
-        if (CHOICES.includes(choice)) break;
-        console.log(`Invalid choice! Choose one of ${CHOICES.join(", ")}`);
+        console.log(`Please choose one of (${RPSGame.CHOICES.join(", ")}): `);
+        choice = RPSGame.readline.prompt().toLowerCase();
+        if (RPSGame.CHOICES.includes(choice)) break;
+        console.log(
+          `Invalid choice! Choose one of ${RPSGame.CHOICES.join(", ")}`
+        );
       }
       this.moves.push(choice);
     },
@@ -68,12 +54,29 @@ function createHuman() {
 
 const RPSGame = {
   // The orchestration engine - where the procedural flow takes place
+  readline: require("readline-sync"),
+
+  CHOICES: ["rock", "paper", "scissors", "lizard", "spock"],
+  WINNING_MOVES: [
+    "rockscissors",
+    "paperrock",
+    "scissorspaper",
+    "rocklizard",
+    "lizardspock",
+    "spockscissors",
+    "scissorslizard",
+    "lizardpaper",
+    "paperspock",
+    "spockrock",
+  ],
+  SCORE_TO_WIN: 5,
+
   human: createHuman(),
   comp: createComp(),
 
   displayWelcomeMsg() {
     console.clear();
-    console.log(`Welcome to ${CHOICES.join(", ")}! First to 5 wins!`);
+    console.log(`Welcome to ${this.CHOICES.join(", ")}! First to 5 wins!`);
     console.log("Scissors cuts Paper cover Rock crushes");
     console.log("Lizard poisons Spock smashes Scissors");
     console.log("decapitates Lizard eats Paper disproves");
@@ -84,7 +87,7 @@ const RPSGame = {
     console.clear();
     console.log("Thanks for playing :) Goodbye!");
     console.log('Press "ENTER" to quit.');
-    readline.prompt();
+    this.readline.prompt();
   },
 
   displayWinner() {
@@ -95,7 +98,7 @@ const RPSGame = {
 
     if (humanMove === compMove) {
       console.log("It's a tie.");
-    } else if (WINNING_MOVES.includes(humanMove + compMove)) {
+    } else if (this.WINNING_MOVES.includes(humanMove + compMove)) {
       console.log("You win!");
       this.human.incrementScore();
     } else {
@@ -107,19 +110,19 @@ const RPSGame = {
       `Your score is: ${this.human.score} and computer score: ${this.comp.score}`
     );
     console.log('Press "ENTER" to continue!');
-    readline.prompt();
+    this.readline.prompt();
     console.clear();
   },
 
   displayGrandWinner() {
-    if (this.human.score > this.comp.score)
+    if (this.human.score > this.comp.score) {
       console.log("You are the GRAND WINNER!");
-    else console.log("The computer is the Grand Winner :(");
+    } else console.log("The computer is the Grand Winner :(");
   },
 
   playAgain() {
     console.log('Would you like to play again? "y" / "n"');
-    let answer = readline.prompt().toLowerCase();
+    let answer = this.readline.prompt().toLowerCase();
     return answer === "y" || answer === "yes";
   },
 
@@ -135,7 +138,10 @@ const RPSGame = {
       this.comp.choose();
       this.displayWinner();
 
-      if (this.human.score >= SCORE_TO_WIN || this.comp.score >= SCORE_TO_WIN) {
+      if (
+        this.human.score >= this.SCORE_TO_WIN ||
+        this.comp.score >= this.SCORE_TO_WIN
+      ) {
         this.displayGrandWinner();
         if (this.playAgain()) {
           this.resetScores();
