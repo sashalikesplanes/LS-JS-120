@@ -1,3 +1,3 @@
-console.log(instanceof "Hello");
-console.log(instanceof [1,2,3]);
-console.log(instanceof {name: 'Srdjan'});
+console.log("Hello".constructor.name);
+console.log([1, 2, 3].constructor.name);
+console.log({ name: "Srdjan" }.constructor.name);
