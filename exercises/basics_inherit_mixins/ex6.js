@@ -16,10 +16,10 @@ class Dog {
   }
 }
 
-Object.assign(Dog.prototype, swimMixin);
-Object.assign(Fish.prototype, swimMixin);
-
 class Maltese extends Dog {}
+
+Object.assign(Maltese.prototype, swimMixin);
+Object.assign(Fish.prototype, swimMixin);
 
 let dog1 = new Maltese("Buddy");
 let fish1 = new Fish("Nemo");
