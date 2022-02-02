@@ -132,6 +132,14 @@ class Player extends CardHolder {
   getPurse() {
     return this.purse;
   }
+
+  incrementPurse() {
+    this.purse += 1;
+  }
+
+  decrementPurse() {
+    this.purse -= 1;
+  }
 }
 
 class TwentyOneGame {
