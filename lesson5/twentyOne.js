@@ -325,23 +325,37 @@ You win at ${TwentyOneGame.WINNING_PURSE} coins in your purse!`);
     return value;
   }
 
-  printResult() {
+  getWinner() {
     if (this.isBust(this.player)) {
-      console.log("You are bust :( Dealer wins!");
+      return this.dealer;
     } else if (this.isBust(this.dealer)) {
-      console.log("Dealer is bust. You win!");
+      return this.player;
     } else {
       let playerHandValue = this.getHandValue(this.player.getHand());
       let dealerHandValue = this.getHandValue(this.dealer.getHand());
-      console.log(`Your hand is worth: ${playerHandValue}.`);
-      console.log(`Dealer's hand is worth: ${dealerHandValue}.`);
       if (playerHandValue > dealerHandValue) {
-        console.log("You win!");
+        return this.player;
       } else if (playerHandValue < dealerHandValue) {
-        console.log("Dealer wins :(");
+        return this.dealer;
       } else {
-        console.log("Equal hand values, its a tie :/");
+        return null;
       }
+    }
+  }
+
+  printResult() {
+    let playerHandValue = this.getHandValue(this.player.getHand());
+    let dealerHandValue = this.getHandValue(this.dealer.getHand());
+    console.log(`Your hand is worth: ${playerHandValue}.`);
+    console.log(`Dealer's hand is worth: ${dealerHandValue}.`);
+
+    let winner = this.getWinner();
+    if (winner === this.player) {
+      console.log("You win!");
+    } else if (winner === this.dealer) {
+      console.log("Dealer wins :(");
+    } else {
+      console.log("Equal hand values, its a tie :/");
     }
     console.log('Press "ENTER" to continue');
     readline.prompt();
