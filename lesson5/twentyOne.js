@@ -181,7 +181,7 @@ class TwentyOneGame {
     console.log(
       `2 - 10  are worth their face values
 Jack, Queen and King are worth ${TwentyOneGame.FACE_CARD_VALUE} each
-Ace is worth either ${TwentyOneGame.ACE_CARD_VALUE} or 1 depending on if you're over 21`
+Ace is worth either ${TwentyOneGame.ACE_CARD_VALUE} or 1 depending on if you're over ${TwentyOneGame.BUST_VALUE}`
     );
     console.log();
     console.log(
