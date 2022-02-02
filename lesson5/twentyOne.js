@@ -202,7 +202,10 @@ class TwentyOneGame {
       console.log("You are rich!!!");
     }
   }
-  updatePlayerPurse() {}
+  updatePlayerPurse(winner) {
+    if (winner === this.player) this.player.incrementPurse();
+    else if (winner === this.dealer) this.player.decrementPurse();
+  }
 
   setupNewRound() {
     this.printPlayerPurse();
