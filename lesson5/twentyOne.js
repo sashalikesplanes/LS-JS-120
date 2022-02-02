@@ -110,18 +110,27 @@ class CardHolder {
   getName() {
     return this.name;
   }
+
+  clearHand() {
+    this.hand = [];
+  }
 }
 
 class Player extends CardHolder {
-  constructor() {
+  constructor(initialPurse) {
     super();
     this.setPlayerName();
+    this.purse = initialPurse;
   }
 
   setPlayerName() {
     console.log('Please enter your name and press "ENTER"');
     let name = readline.prompt();
     this.name = name;
+  }
+
+  getPurse() {
+    return this.purse;
   }
 }
 
@@ -133,51 +142,90 @@ class TwentyOneGame {
   static ACE_CARD_VALUE = 11;
   static BUST_VALUE = 21;
   static DEALER_STAY_VALUE = 17;
+  static INITIAL_PURSE = 5;
+  static WINNING_PURSE = 10;
 
   constructor() {
     this.printWelcome();
     this.dealer = new CardHolder(TwentyOneGame.DEALER_NAME);
-    this.player = new Player();
-    this.deck = new Deck(TwentyOneGame.DECK_SIZE);
+    this.player = new Player(TwentyOneGame.INITIAL_PURSE);
+    this.deck = null;
   }
 
   play() {
-    this.dealHands([this.dealer, this.player]);
-    this.printHands([this.dealer, this.player]);
+    while (this.player.getPurse() > 0) {
+      this.setupNewRound();
+      this.playerTurn();
+      this.dealerTurn();
+      this.printHands([this.dealer, this.player], false);
+      this.printResult();
+      this.updatePlayerPurse();
+    }
+    this.printGoodbye();
+  }
 
+  playerTurn() {
     while (this.playerHits()) {
       this.player.addACardToHand(this.deck.getACard());
       this.printHands([this.dealer, this.player]);
       if (this.isBust(this.player)) break;
     }
+  }
 
+  dealerTurn() {
     if (!this.isBust(this.player)) {
       while (this.dealerHits()) {
         this.dealer.addACardToHand(this.deck.getACard());
         if (this.isBust(this.dealer)) break;
       }
     }
-    this.printHands([this.dealer, this.player], false);
-    this.printResult();
-    this.printGoodbye();
+  }
+
+  updatePlayerPurse() {}
+
+  setupNewRound() {
+    this.printPlayerPurse();
+    this.deck = new Deck(TwentyOneGame.DECK_SIZE);
+    this.clearHands([this.dealer, this.player]);
+    this.dealHands([this.dealer, this.player]);
+    this.printHands([this.dealer, this.player]);
+  }
+
+  clearHands(players) {
+    players.forEach((player) => player.clearHand());
+  }
+
+  printPlayerPurse() {
+    console.clear();
+    console.log(
+      `You have ${this.player.getPurse()} coins. Press "ENTER" to start the round.`
+    );
+    readline.prompt();
   }
 
   printWelcome() {
     console.clear();
     console.log(`Welcome to the game of ${TwentyOneGame.BUST_VALUE}`);
+    console.log();
     console.log(
       "The goal is to get a higher hand value than the dealer, " +
         `but not more than ${TwentyOneGame.BUST_VALUE}, otherwise you're bust!`
     );
     console.log(
       `2 - 10  are worth their face values
-      Jack, Queen and King are worth ${TwentyOneGame.FACE_CARD_VALUE} each
-      Ace is worth either ${TwentyOneGame.ACE_CARD_VALUE} or 1 depending on if you're over 21`
+Jack, Queen and King are worth ${TwentyOneGame.FACE_CARD_VALUE} each
+Ace is worth either ${TwentyOneGame.ACE_CARD_VALUE} or 1 depending on if you're over 21`
     );
+    console.log();
     console.log(
       `You can always choose to hit or stay, the dealer stays ` +
         `once their hand is worth ${TwentyOneGame.DEALER_STAY_VALUE} or more.`
     );
+    console.log();
+    console.log(`Your start with a purse of ${TwentyOneGame.INITIAL_PURSE}
+Each win you get 1 coin, each loss you lose a coin
+You win at ${TwentyOneGame.WINNING_PURSE} coins in your purse!`);
+    console.log();
     console.log('Press "ENTER" to start the game.');
     readline.prompt();
   }
@@ -295,6 +343,8 @@ class TwentyOneGame {
         console.log("Equal hand values, its a tie :/");
       }
     }
+    console.log('Press "ENTER" to continue');
+    readline.prompt();
   }
 }
 
