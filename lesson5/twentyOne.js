@@ -381,10 +381,11 @@ You win at ${TwentyOneGame.WINNING_PURSE} coins in your purse!`);
 
   printHandValues(players) {
     players.forEach((player) => {
+      let handValue = this.getHandValue(player.getHand());
       console.log(
-        `${player.getName()}'s hand is worth: ${this.getHandValue(
-          player.getHand()
-        )}`
+        `${player.getName()}'s hand is worth: ${handValue}${
+          handValue > TwentyOneGame.BUST_VALUE ? " . BUST!" : ""
+        }`
       );
     });
   }
