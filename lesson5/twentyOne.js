@@ -45,20 +45,20 @@ class ClassicCard {
     return `${valueString} of ${ClassicCard.SUIT_TO_STRING[this.suit]}`;
   }
 
-  getValue() {
-    return this.value;
-  }
-
-  getSuit() {
-    return this.suit;
+  isAce() {
+    return this.value === ClassicCard.ACE_CARD;
   }
 
   isFaceCard() {
     return ClassicCard.FACE_CARDS.includes(this.value);
   }
 
-  isAce() {
-    return this.value === ClassicCard.ACE_CARD;
+  getValue() {
+    return this.value;
+  }
+
+  getSuit() {
+    return this.suit;
   }
 }
 
