@@ -81,6 +81,12 @@ class Deck {
     return deck;
   }
 
+  shuffleDeck() {
+    for (let count = 0; count < Deck.NUMBER_OF_SHUFFLES; count++) {
+      this.shuffleDeckOnce();
+    }
+  }
+
   shuffleDeckOnce() {
     for (let count = this.deckSize - 1; count > 0; count--) {
       let randomCardIdx = Math.floor(Math.random() * this.deckSize);
@@ -88,12 +94,6 @@ class Deck {
         this.deck[randomCardIdx],
         this.deck[count],
       ];
-    }
-  }
-
-  shuffleDeck() {
-    for (let count = 0; count < Deck.NUMBER_OF_SHUFFLES; count++) {
-      this.shuffleDeckOnce();
     }
   }
 
