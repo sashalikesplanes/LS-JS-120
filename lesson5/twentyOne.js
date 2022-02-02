@@ -170,79 +170,6 @@ class TwentyOneGame {
     this.deck = null;
   }
 
-  play() {
-    while (
-      this.player.getPurse() > 0 &&
-      this.player.getPurse() < TwentyOneGame.WINNING_PURSE
-    ) {
-      this.setupNewRound();
-
-      this.playerTurn();
-      this.dealerTurn();
-
-      this.closeRound();
-    }
-    this.printFinalResult();
-    this.printGoodbye();
-  }
-
-  closeRound() {
-    console.log("Final hands:");
-    this.printHands(this.participants, false);
-    let winner = this.getWinner();
-    this.printHandValues(this.participants);
-    this.printResult(winner);
-    this.updatePlayerPurse(winner);
-  }
-
-  playerTurn() {
-    while (this.playerHits()) {
-      this.player.addACardToHand(this.deck.getACard());
-      this.printHands(this.participants);
-      if (this.isBust(this.player)) break;
-    }
-  }
-
-  dealerTurn() {
-    if (!this.isBust(this.player)) {
-      while (this.dealerHits()) {
-        this.dealer.addACardToHand(this.deck.getACard());
-        if (this.isBust(this.dealer)) break;
-      }
-    }
-  }
-  printFinalResult() {
-    if (this.player.getPurse() === 0) {
-      console.log("You are broke, goodbye");
-    } else {
-      console.log("You are rich!!!");
-    }
-  }
-  updatePlayerPurse(winner) {
-    if (winner === this.player) this.player.incrementPurse();
-    else if (winner === this.dealer) this.player.decrementPurse();
-  }
-
-  setupNewRound() {
-    this.printPlayerPurse();
-    this.deck = new Deck(TwentyOneGame.DECK_SIZE);
-    this.clearHands(this.participants);
-    this.dealHands(this.participants);
-    this.printHands(this.participants);
-  }
-
-  clearHands(players) {
-    players.forEach((player) => player.clearHand());
-  }
-
-  printPlayerPurse() {
-    console.clear();
-    console.log(
-      `You have ${this.player.getPurse()} coins. Press "ENTER" to start the round.`
-    );
-    readline.prompt();
-  }
-
   printWelcome() {
     console.clear();
     console.log(`Welcome to the game of ${TwentyOneGame.BUST_VALUE}`);
@@ -270,10 +197,44 @@ You win at ${TwentyOneGame.WINNING_PURSE} coins in your purse!`);
     readline.prompt();
   }
 
-  printGoodbye() {
+  play() {
+    while (
+      this.player.getPurse() > 0 &&
+      this.player.getPurse() < TwentyOneGame.WINNING_PURSE
+    ) {
+      this.setupNewRound();
+
+      this.playerTurn();
+      this.dealerTurn();
+
+      this.closeRound();
+    }
+    this.printFinalResult();
+    this.printGoodbye();
+  }
+
+  setupNewRound() {
+    this.printPlayerPurse();
+    this.deck = new Deck(TwentyOneGame.DECK_SIZE);
+    this.clearHands(this.participants);
+    this.dealHands(this.participants);
+    this.printHands(this.participants);
+  }
+
+  printPlayerPurse() {
+    console.clear();
     console.log(
-      "Thank you for playing Twenty One made by Sasha from Russia with love."
+      `You have ${this.player.getPurse()} coins. Press "ENTER" to start the round.`
     );
+    readline.prompt();
+  }
+
+  clearHands(players) {
+    players.forEach((player) => player.clearHand());
+  }
+
+  dealHands(players) {
+    players.forEach((player) => this.dealHand(player));
   }
 
   dealHand(player) {
@@ -282,8 +243,15 @@ You win at ${TwentyOneGame.WINNING_PURSE} coins in your purse!`);
     }
   }
 
-  dealHands(players) {
-    players.forEach((player) => this.dealHand(player));
+  printHands(players, hideDealerCards = true) {
+    console.clear();
+    players.forEach((player) => {
+      if (player === this.dealer) {
+        this.printHand(player, hideDealerCards);
+      } else {
+        this.printHand(player);
+      }
+    });
   }
 
   printHand(player, hideCards = false) {
@@ -301,15 +269,12 @@ You win at ${TwentyOneGame.WINNING_PURSE} coins in your purse!`);
     console.log(`${player.getName()} has ${cardString}`);
   }
 
-  printHands(players, hideDealerCards = true) {
-    console.clear();
-    players.forEach((player) => {
-      if (player === this.dealer) {
-        this.printHand(player, hideDealerCards);
-      } else {
-        this.printHand(player);
-      }
-    });
+  playerTurn() {
+    while (this.playerHits()) {
+      this.player.addACardToHand(this.deck.getACard());
+      this.printHands(this.participants);
+      if (this.isBust(this.player)) break;
+    }
   }
 
   playerHits() {
@@ -324,34 +289,10 @@ You win at ${TwentyOneGame.WINNING_PURSE} coins in your purse!`);
     return choice[0] === "h";
   }
 
-  dealerHits() {
-    if (
-      this.getHandValue(this.dealer.getHand()) < TwentyOneGame.DEALER_STAY_VALUE
-    ) {
-      return true;
-    } else return false;
-  }
-
   isBust(player) {
     if (this.getHandValue(player.getHand()) > TwentyOneGame.BUST_VALUE) {
       return true;
     } else return false;
-  }
-
-  getCardValue(card) {
-    if (!card.isFaceCard() && !card.isAce()) return Number(card.value);
-    else if (card.isFaceCard()) {
-      return TwentyOneGame.FACE_CARD_VALUE;
-    } else return TwentyOneGame.ACE_CARD_VALUE;
-  }
-
-  getHandNumOfAces(hand) {
-    let countOfAces = 0;
-    hand.forEach(
-      (card) =>
-        (countOfAces += card.getValue() === ClassicCard.ACE_CARD ? 1 : 0)
-    );
-    return countOfAces;
   }
 
   getHandValue(hand) {
@@ -363,6 +304,59 @@ You win at ${TwentyOneGame.WINNING_PURSE} coins in your purse!`);
       numOfAces -= 1;
     }
     return value;
+  }
+
+  getHandNumOfAces(hand) {
+    let countOfAces = 0;
+    hand.forEach(
+      (card) =>
+        (countOfAces += card.getValue() === ClassicCard.ACE_CARD ? 1 : 0)
+    );
+    return countOfAces;
+  }
+
+  getCardValue(card) {
+    if (!card.isFaceCard() && !card.isAce()) return Number(card.value);
+    else if (card.isFaceCard()) {
+      return TwentyOneGame.FACE_CARD_VALUE;
+    } else return TwentyOneGame.ACE_CARD_VALUE;
+  }
+
+  dealerTurn() {
+    if (!this.isBust(this.player)) {
+      while (this.dealerHits()) {
+        this.dealer.addACardToHand(this.deck.getACard());
+        if (this.isBust(this.dealer)) break;
+      }
+    }
+  }
+
+  dealerHits() {
+    if (
+      this.getHandValue(this.dealer.getHand()) < TwentyOneGame.DEALER_STAY_VALUE
+    ) {
+      return true;
+    } else return false;
+  }
+
+  closeRound() {
+    console.log("Final hands:");
+    this.printHands(this.participants, false);
+    let winner = this.getWinner();
+    this.printHandValues(this.participants);
+    this.printResult(winner);
+    this.updatePlayerPurse(winner);
+  }
+
+  printHandValues(players) {
+    players.forEach((player) => {
+      let handValue = this.getHandValue(player.getHand());
+      console.log(
+        `${player.getName()}'s hand is worth: ${handValue}${
+          handValue > TwentyOneGame.BUST_VALUE ? " - BUST!" : ""
+        }`
+      );
+    });
   }
 
   getWinner() {
@@ -395,15 +389,23 @@ You win at ${TwentyOneGame.WINNING_PURSE} coins in your purse!`);
     readline.prompt();
   }
 
-  printHandValues(players) {
-    players.forEach((player) => {
-      let handValue = this.getHandValue(player.getHand());
-      console.log(
-        `${player.getName()}'s hand is worth: ${handValue}${
-          handValue > TwentyOneGame.BUST_VALUE ? " - BUST!" : ""
-        }`
-      );
-    });
+  updatePlayerPurse(winner) {
+    if (winner === this.player) this.player.incrementPurse();
+    else if (winner === this.dealer) this.player.decrementPurse();
+  }
+
+  printFinalResult() {
+    if (this.player.getPurse() === 0) {
+      console.log("You are broke, goodbye");
+    } else {
+      console.log("You are rich!!!");
+    }
+  }
+
+  printGoodbye() {
+    console.log(
+      "Thank you for playing Twenty One made by Sasha from Russia with love."
+    );
   }
 }
 
