@@ -38,9 +38,10 @@ class ClassicCard {
   }
 
   toString() {
-    let valueString = Number.isNaN(Number(this.value))
-      ? ClassicCard.VALUE_TO_STRING[this.value]
-      : this.value;
+    let valueString =
+      this.isAce() || this.isFaceCard()
+        ? ClassicCard.VALUE_TO_STRING[this.value]
+        : this.value;
     return `${valueString} of ${ClassicCard.SUIT_TO_STRING[this.suit]}`;
   }
 
@@ -175,16 +176,23 @@ class TwentyOneGame {
       this.player.getPurse() < TwentyOneGame.WINNING_PURSE
     ) {
       this.setupNewRound();
+
       this.playerTurn();
       this.dealerTurn();
-      this.printHands(this.participants, false);
-      let winner = this.getWinner();
-      this.printHandValues(this.participants);
-      this.printResult(winner);
-      this.updatePlayerPurse(winner);
+
+      this.closeRound();
     }
     this.printFinalResult();
     this.printGoodbye();
+  }
+
+  closeRound() {
+    console.log("Final hands:");
+    this.printHands(this.participants, false);
+    let winner = this.getWinner();
+    this.printHandValues(this.participants);
+    this.printResult(winner);
+    this.updatePlayerPurse(winner);
   }
 
   playerTurn() {
@@ -392,7 +400,7 @@ You win at ${TwentyOneGame.WINNING_PURSE} coins in your purse!`);
       let handValue = this.getHandValue(player.getHand());
       console.log(
         `${player.getName()}'s hand is worth: ${handValue}${
-          handValue > TwentyOneGame.BUST_VALUE ? " . BUST!" : ""
+          handValue > TwentyOneGame.BUST_VALUE ? " - BUST!" : ""
         }`
       );
     });
