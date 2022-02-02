@@ -51,6 +51,14 @@ class ClassicCard {
   getSuit() {
     return this.suit;
   }
+
+  isFaceCard() {
+    return ClassicCard.FACE_CARDS.includes(this.value);
+  }
+
+  isAce() {
+    return this.value === ClassicCard.ACE_CARD;
+  }
 }
 
 class Deck {
@@ -323,8 +331,8 @@ You win at ${TwentyOneGame.WINNING_PURSE} coins in your purse!`);
   }
 
   getCardValue(card) {
-    if (!Number.isNaN(Number(card.value))) return Number(card.value);
-    else if (ClassicCard.FACE_CARDS.includes(card.value)) {
+    if (!card.isFaceCard() && !card.isAce()) return Number(card.value);
+    else if (card.isFaceCard()) {
       return TwentyOneGame.FACE_CARD_VALUE;
     } else return TwentyOneGame.ACE_CARD_VALUE;
   }
