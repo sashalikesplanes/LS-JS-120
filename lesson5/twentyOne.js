@@ -154,7 +154,10 @@ class TwentyOneGame {
   }
 
   play() {
-    while (this.player.getPurse() > 0) {
+    while (
+      this.player.getPurse() > 0 &&
+      this.player.getPurse() < TwentyOneGame.WINNING_PURSE
+    ) {
       this.setupNewRound();
       this.playerTurn();
       this.dealerTurn();
@@ -164,6 +167,7 @@ class TwentyOneGame {
       this.printResult(winner);
       this.updatePlayerPurse(winner);
     }
+    this.printFinalResult();
     this.printGoodbye();
   }
 
@@ -183,7 +187,13 @@ class TwentyOneGame {
       }
     }
   }
-
+  printFinalResult() {
+    if (this.player.getPurse() === 0) {
+      console.log("You are broke, goodbye");
+    } else {
+      console.log("You are rich!!!");
+    }
+  }
   updatePlayerPurse() {}
 
   setupNewRound() {
