@@ -1,18 +1,6 @@
 const readline = require("readline-sync");
 
 class ClassicCard {
-  static VALUE_TO_STRING = {
-    J: "Jack",
-    Q: "Queen",
-    K: "King",
-    A: "Ace",
-  };
-  static SUIT_TO_STRING = {
-    S: "Spades",
-    H: "Hearts",
-    C: "Clubs",
-    D: "Diamonds",
-  };
   static VALID_VALUES = [
     "2",
     "3",
@@ -23,14 +11,14 @@ class ClassicCard {
     "8",
     "9",
     "10",
-    "J",
-    "Q",
-    "K",
-    "A",
+    "Jack",
+    "Queen",
+    "King",
+    "Ace",
   ];
-  static VALID_SUITS = ["S", "H", "C", "D"];
-  static ACE_CARD = "A";
-  static FACE_CARDS = ["J", "Q", "K"];
+  static VALID_SUITS = ["Spades", "Hearts", "Clubs", "Diamonds"];
+  static ACE_CARD = "Ace";
+  static FACE_CARDS = ["Jack", "Queen", "King"];
 
   constructor(value, suit) {
     this.value = value;
@@ -38,11 +26,7 @@ class ClassicCard {
   }
 
   toString() {
-    let valueString =
-      this.isAce() || this.isFaceCard()
-        ? ClassicCard.VALUE_TO_STRING[this.value]
-        : this.value;
-    return `${valueString} of ${ClassicCard.SUIT_TO_STRING[this.suit]}`;
+    return `${this.value} of ${this.suit}`;
   }
 
   isAce() {
