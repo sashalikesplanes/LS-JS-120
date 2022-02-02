@@ -149,6 +149,7 @@ class TwentyOneGame {
     this.printWelcome();
     this.dealer = new CardHolder(TwentyOneGame.DEALER_NAME);
     this.player = new Player(TwentyOneGame.INITIAL_PURSE);
+    this.participants = [this.dealer, this.player];
     this.deck = null;
   }
 
@@ -157,9 +158,11 @@ class TwentyOneGame {
       this.setupNewRound();
       this.playerTurn();
       this.dealerTurn();
-      this.printHands([this.dealer, this.player], false);
-      this.printResult();
-      this.updatePlayerPurse();
+      this.printHands(this.participants, false);
+      let winner = this.getWinner();
+      this.printHandValues(this.participants);
+      this.printResult(winner);
+      this.updatePlayerPurse(winner);
     }
     this.printGoodbye();
   }
@@ -167,7 +170,7 @@ class TwentyOneGame {
   playerTurn() {
     while (this.playerHits()) {
       this.player.addACardToHand(this.deck.getACard());
-      this.printHands([this.dealer, this.player]);
+      this.printHands(this.participants);
       if (this.isBust(this.player)) break;
     }
   }
@@ -186,9 +189,9 @@ class TwentyOneGame {
   setupNewRound() {
     this.printPlayerPurse();
     this.deck = new Deck(TwentyOneGame.DECK_SIZE);
-    this.clearHands([this.dealer, this.player]);
-    this.dealHands([this.dealer, this.player]);
-    this.printHands([this.dealer, this.player]);
+    this.clearHands(this.participants);
+    this.dealHands(this.participants);
+    this.printHands(this.participants);
   }
 
   clearHands(players) {
@@ -343,13 +346,7 @@ You win at ${TwentyOneGame.WINNING_PURSE} coins in your purse!`);
     }
   }
 
-  printResult() {
-    let playerHandValue = this.getHandValue(this.player.getHand());
-    let dealerHandValue = this.getHandValue(this.dealer.getHand());
-    console.log(`Your hand is worth: ${playerHandValue}.`);
-    console.log(`Dealer's hand is worth: ${dealerHandValue}.`);
-
-    let winner = this.getWinner();
+  printResult(winner) {
     if (winner === this.player) {
       console.log("You win!");
     } else if (winner === this.dealer) {
@@ -359,6 +356,16 @@ You win at ${TwentyOneGame.WINNING_PURSE} coins in your purse!`);
     }
     console.log('Press "ENTER" to continue');
     readline.prompt();
+  }
+
+  printHandValues(players) {
+    players.forEach((player) => {
+      console.log(
+        `${player.getName()}'s hand is worth: ${this.getHandValue(
+          player.getHand()
+        )}`
+      );
+    });
   }
 }
 
