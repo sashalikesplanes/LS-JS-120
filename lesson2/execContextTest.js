@@ -32,4 +32,5 @@ class Foo extends Bar {
 }
 
 let foo = new Foo();
-console.log("foo" in foo);
+console.log(foo.__proto__.hasOwnProperty("constructor"));
+console.log(Foo.prototype.constructor === Foo); // true
