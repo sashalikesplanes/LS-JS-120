@@ -89,40 +89,73 @@ console.log(user.points);
 // // not assign the prototype
 // console.log(paidUser.constructor === PaidUserCreator); // false
 
-class UserCreator {
-  constructor(name) {
-    this.name = name;
+// class UserCreator {
+//   constructor(name) {
+//     this.name = name;
+//   }
+
+//   say() {
+//     console.log(this.name);
+//   }
+// }
+
+// class PaidUserCreator extends UserCreator {
+//   constructor(name, points) {
+//     super(name);
+//     this.points = points;
+//   }
+
+//   increase() {
+//     this.balance += 1;
+//   }
+// }
+
+// console.log(PaidUserCreator.__proto__ === UserCreator); // true
+// // allows the use of the super keyword
+
+// const user = new UserCreator("ryan");
+// const paidUser = new PaidUserCreator("sasha", 5);
+
+// console.log(user.__proto__ === UserCreator.prototype); // true
+// console.log(user.constructor === UserCreator); // true
+
+// console.log(paidUser.__proto__ === UserCreator.prototype); // false
+// console.log(paidUser.constructor === UserCreator); // false
+
+// console.log(paidUser.__proto__ === PaidUserCreator.prototype); // true
+// console.log(paidUser.constructor === PaidUserCreator); // true
+
+// console.log(paidUser.__proto__.__proto__ === UserCreator.prototype); // true
+
+class Foo {
+  constructor() {
+    this.bar = 1;
   }
 
-  say() {
-    console.log(this.name);
+  baz() {
+    console.log(this.bar);
   }
 }
+let foo = new Foo();
+console.log(foo instanceof Foo); // true
+console.log(foo.constructor === Foo); // true
 
-class PaidUserCreator extends UserCreator {
-  constructor(name, points) {
-    super(name);
-    this.points = points;
-  }
+foo.constructor = null;
 
-  increase() {
-    this.balance += 1;
-  }
-}
+console.log(foo instanceof Foo); // true
+console.log(foo.constructor === Foo); // false
 
-console.log(PaidUserCreator.__proto__ === UserCreator); // true
-// allows the use of the super keyword
+foo.__proto__ = null;
 
-const user = new UserCreator("ryan");
-const paidUser = new PaidUserCreator("sasha", 5);
+console.log(foo instanceof Foo); // false
+console.log(foo.constructor === Foo); // false
 
-console.log(user.__proto__ === UserCreator.prototype); // true
-console.log(user.constructor === UserCreator); // true
+let foo2 = new Foo();
 
-console.log(paidUser.__proto__ === UserCreator.prototype); // false
-console.log(paidUser.constructor === UserCreator); // false
+foo2.__proto__ = null;
+console.log(foo2 instanceof Foo); // false
+console.log(foo2.constructor === Foo); // false as constructor is in __proto__?
 
-console.log(paidUser.__proto__ === PaidUserCreator.prototype); // true
-console.log(paidUser.constructor === PaidUserCreator); // true
-
-console.log(paidUser.__proto__.__proto__ === UserCreator.prototype); // true
+let foo3 = new Foo();
+console.log(foo3.hasOwnProperty("constructor")); // false
+console.log(foo3.__proto__.hasOwnProperty("constructor")); // true
