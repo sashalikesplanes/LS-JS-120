@@ -1,35 +1,17 @@
-class Foo {
-  constructor(name) {
-    this.name = name;
-    this.bar = this.baz();
+class Test {
+  constructor() {
+    this.baz = 5;
+    this.foo = this.bar();
   }
 
-  baz() {
-    return this.qux(this.name);
-  }
-
-  qux(name) {
-    return name + name;
-  }
-}
-
-let foo = new Foo("test");
-console.log(foo.bar);
-
-class Foo2 {
-  constructor(name) {
-    this.name = name;
-    this.bar = this.baz();
-  }
-
-  baz() {
-    return this.qux();
+  bar() {
+    this.qux();
+    return 1;
   }
 
   qux() {
-    return this.name + this.name;
+    console.log(this.baz); // execution context is global, but why?
   }
 }
 
-let foo2 = new Foo2("test");
-console.log(foo2.bar);
+let test = new Test();
